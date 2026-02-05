@@ -1,6 +1,6 @@
 # HBnB - UML
 
-- **[0. High-Level Package Diagram](./0-High_Level_Package_Diagram)**
+- # **[0. High-Level Package Diagram](./0-High_Level_Package_Diagram)**
 
 ## Objective
 
@@ -55,7 +55,7 @@ PresentationLayer --> BusinessLogicLayer : Facade Pattern
 BusinessLogicLayer --> PersistenceLayer : Database Operations
 ```
 
-- **[1. Detailed Class Diagram for Business Logic Layer](./1-Detailed_Class_Diagram.md)**
+- # **[1. Detailed Class Diagram for Business Logic Layer](./1-Detailed_Class_Diagram.md)**
 
 ## Objective
 
@@ -93,7 +93,7 @@ ClassName3 *-- ClassName : Composition
 ClassName4 --> ClassName : Association
 ```
 
-- **[2. Sequence Diagrams for API Calls](./2-Sequence_Diagram.md)** 
+- # **[2. Sequence Diagrams for API Calls](./2-Sequence_Diagram.md)** 
 
 ## Objective
 
@@ -142,7 +142,7 @@ BusinessLogic-->>API: Return Response
 API-->>User: Return Success/Failure
 ```
 
-- **[3. Documentation Compilation](./3-print_reversed_list_integer.py)**
+- # **[3. Documentation Compilation](./3-print_reversed_list_integer.py)**
 
 ## Objective
 
