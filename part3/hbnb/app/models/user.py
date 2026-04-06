@@ -71,13 +71,10 @@ class User(BaseModel):
     def password(self, password):
         self._password = bcrypt.generate_password_hash(password).decode('utf-8')
 
-    def hash_password(self, password):
-        """Hashes the password before storing it."""
-        self._password = bcrypt.generate_password_hash(password).decode('utf-8')
-
     def verify_password(self, password):
         """Verifies if the provided password matches the hashed password."""
-        return bcrypt.check_password_hash(self._password, password)
+        from flask_bcrypt import check_password_hash
+        return check_password_hash(self._password, password)
 
     @property
     def is_admin(self):

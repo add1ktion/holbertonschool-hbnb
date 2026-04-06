@@ -34,7 +34,7 @@ class HBnBFacade:
         if not user:
             return None
         if 'password' in data:
-            user.hash_password(data.pop('password'))
+            user.password = data.pop('password')
         user.update(data)
         db.session.commit()
         return user

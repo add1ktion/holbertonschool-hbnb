@@ -6,7 +6,7 @@ VALUES (
     'Admin',
     'HBnB',
     'admin@hbnb.io',
-    '$2b$12$7WmsbEqjsU.8pyXreNUX9OIyuWPpKQ.aLZ3jePAP7OAVI48MymCP2',
+    'admin1234',
     TRUE
 );
 

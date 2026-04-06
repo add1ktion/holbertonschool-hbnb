@@ -11,4 +11,5 @@ else:
 app = create_app(config_path)
 
 if __name__ == '__main__':
+    print(f"--- SERVEUR DB PATH: {app.config['SQLALCHEMY_DATABASE_URI']} ---")
     app.run()
