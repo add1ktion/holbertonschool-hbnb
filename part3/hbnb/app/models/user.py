@@ -69,7 +69,14 @@ class User(BaseModel):
 
     @password.setter
     def password(self, password):
-        self._password = bcrypt.generate_password_hash(password).decode('utf-8')
+        """
+        On ne hache QUE si la chaîne ne ressemble pas déjà à un hash Bcrypt.
+        Bcrypt commence toujours par $2b$ ou $2a$.
+        """
+        if password.startswith('$2b$') or password.startswith('$2a$'):
+            self._password = password
+        else:
+            self._password = bcrypt.generate_password_hash(password).decode('utf-8')
 
     def verify_password(self, password):
         """Verifies if the provided password matches the hashed password."""
