@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/png" href="/static/images/logo.png"> <title>HBNB - Index</title> <link rel="stylesheet" href="/static/styles.css">
+        <script src="/static/scripts.js"></script>
+    </head>
+<body>
+    {% include "includes/_header.html" %}
+
+    <main>
+        <section id="filter">
+            <label for="price-filter">Max price:</label>
+            <select id="price-filter">
+                <option value="all">All Prices</option>
+                <option value="50">Below $50</option>
+                <option value="100">Below $100</option>
+                <option value="200">Below $200</option>
+            </select>
+        </section>
+
+        <section id="places-list">
+            </section>
+    </main>
+
+    {% include "includes/_footer.html" %}
+</body>
+</html>

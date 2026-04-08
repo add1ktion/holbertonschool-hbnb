@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/png" href="/static/images/logo.png"> <title>HBNB - Place</title> <link rel="stylesheet" href="/static/styles.css">
+        <script src="/static/scripts.js"></script>
+    </head>
+<body>
+    {% include "includes/_header.html" %}
+
+    <main>
+        <section id="place-details" class="place-details">
+            <p>Loading details...</p>
+        </section>
+
+        <section id="add-review" style="display: none;">
+            <h3>Leave a Review</h3>
+            <a href="/add_review.html" id="add-review-button" class="details-button">Add a Review</a>
+        </section>
+    </main>
+
+    {% include "includes/_footer.html" %}
+    
+    </body>
+</html>

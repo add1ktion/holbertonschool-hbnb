@@ -1,0 +1,249 @@
+/* --- Variables et Bases --- */
+:root {
+    --primary-color: #ff385c;    /* Le rouge Airbnb signature */
+    --primary-hover: #e31c5f;
+    --dark-color: #222222;       /* Anthracite pour header/footer */
+    --text-color: #484848;      /* Un gris très foncé, plus doux que le noir */
+    --light-gray: #717171;
+    --border-color: #dddddd;
+    --bg-color: #f7f7f7;        /* Fond blanc cassé pour le confort visuel */
+    --card-bg: #ffffff;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Prend toute la hauteur de la fenêtre */
+    padding-bottom: 80px;
+}
+
+main {
+    flex: 1; /* Force le contenu principal à pousser le footer vers le bas */
+}
+
+/* --- CHANGEMENT 1 : Header & Nav (Dark Version) --- */
+header {
+    background-color: var(--dark-color); /* Fond foncé */
+    border-bottom: 1px solid #333;
+    padding: 15px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* Ombre portée */
+}
+
+.logo { height: 35px; }
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #ffffff; /* Texte blanc pour contraster */
+    font-weight: 600;
+    font-size: 14px;
+    transition: color 0.3s;
+}
+
+nav a:hover {
+    color: var(--primary-color);
+}
+
+.login-button, #logout-button {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 10px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.3s;
+}
+
+.login-button:hover, #logout-button:hover {
+    background-color: var(--primary-hover);
+}
+
+.login-button:active, #logout-button:active {
+    transform: scale(0.95); /* Petit effet de clic */
+}
+
+/* --- Filtres --- */
+#filter {
+    padding: 20px 40px;
+    background: #fff;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+#filter label {
+    margin: 0; /* Enlève les marges qui pourraient décaler le texte */
+    white-space: nowrap; /* Empêche le texte de sauter à la ligne */
+}
+
+#filter select {
+    width: 200px !important; /* Force la largeur à 200px */
+    margin-left: 10px;
+    padding: 5px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+#filter select:hover {
+    border-color: var(--primary-color); /* Le contour devient rouge au survol */
+}
+
+/* --- Grille d'accueil (Grid) --- */
+#places-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    padding: 30px 40px;
+}
+
+.place-card {
+    background-color: var(--card-bg);
+    border: 1px solid #eaeaea;
+    border-radius: 12px;
+    padding: 16px;
+    margin: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06); /* Ombre douce */
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.place-card:hover {
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12); /* Profondeur au survol */
+    transform: translateY(-3px); /* Soulèvement */
+}
+
+.place-card h3 {
+    font-size: 18px;
+    margin-bottom: 6px;
+    color: #222;
+}
+
+.place-card p {
+    color: var(--light-gray);
+    font-size: 14px;
+}
+
+.details-button {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 8px 20px;
+    background-color: #333;
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* --- Page Détails Lieu --- */
+.place-details {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 30px;
+    background-color: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.price-tag {
+    font-size: 18px;
+    margin: 20px 0;
+    padding: 15px 20px;
+    background-color: #f9f9f9;
+    border-left: 4px solid var(--primary-color);
+    border-radius: 4px;
+}
+
+.amenities-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Deux colonnes */
+    gap: 15px;
+    list-style: none;
+}
+
+.review-card {
+    background-color: #fff;
+    border: 1px solid #eee;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+/* Centrage "Leave a Review" */
+#add-review {
+    text-align: center;
+    padding: 40px 20px;
+    border-top: 1px solid var(--border-color);
+    margin-top: 30px;
+}
+
+#add-review-button {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 12px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+}
+
+/* --- Formulaires (Login & Add Review) --- */
+#review-form, #login-form {
+    max-width: 450px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1); /* Forte ombre */
+}
+
+.form-group { margin-bottom: 20px; }
+
+label { font-size: 14px; margin-bottom: 8px; font-weight: 600; color: #555; }
+
+input, textarea, select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+/* --- CHANGEMENT 2 : Footer (Dark Version) --- */
+footer {
+    background-color: var(--dark-color);
+    color: #b0b0b0;
+    padding: 20px;
+    text-align: center;
+    font-size: 13px;
+    border-top: 1px solid #333;
+
+    /* Force le footer tout en bas */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
