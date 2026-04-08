@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+"""Reviews API endpoints."""
+
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from app.services import facade
@@ -7,18 +10,25 @@ api = Namespace('reviews', description='Review operations')
 # Define the review model for input validation and documentation
 review_model = api.model('Review', {
     'text': fields.String(required=True, description='Text of the review'),
-    'rating': fields.Integer(required=True, description='Rating of the place (1-5)'),
+    'rating': fields.Integer(
+        required=True, description='Rating of the place (1-5)'
+    ),
     'user_id': fields.String(required=True, description='ID of the user'),
     'place_id': fields.String(required=True, description='ID of the place')
 })
 
 review_update_model = api.model('ReviewUpdate', {
     'text': fields.String(required=True, description='Text of the review'),
-    'rating': fields.Integer(required=True, description='Rating of the place (1-5)')
+    'rating': fields.Integer(
+        required=True, description='Rating of the place (1-5)'
+    )
 })
+
 
 @api.route('/')
 class ReviewList(Resource):
+    """Resource for managing a list of reviews."""
+
     @api.expect(review_model, validate=True)
     @api.response(201, 'Review successfully created')
     @api.response(400, 'Invalid input data')
@@ -33,13 +43,14 @@ class ReviewList(Resource):
         place = facade.get_place(place_id)
         if not place:
             return {'error': 'Place not found'}, 400
-        
+
         if str(place.owner_id) == str(current_user_id):
             return {'error': 'You cannot review your own place'}, 400
-        
+
         all_reviews = facade.get_all_reviews()
         for r in all_reviews:
-            if str(r.place_id) == str(place_id) and str(r.user_id) == str(current_user_id):
+            if (str(r.place_id) == str(place_id) and
+                    str(r.user_id) == str(current_user_id)):
                 return {'error': 'You have already reviewed this place'}, 400
 
         try:
@@ -67,6 +78,8 @@ class ReviewList(Resource):
 
 @api.route('/<review_id>')
 class ReviewResource(Resource):
+    """Resource for managing a single review."""
+
     @api.response(200, 'Review details retrieved successfully')
     @api.response(404, 'Review not found')
     def get(self, review_id):
@@ -95,7 +108,9 @@ class ReviewResource(Resource):
         review = facade.get_review(review_id)
         if not review:
             return {'error': 'Review not found'}, 404
-        if review.user_id != current_user_id and not claims.get('is_admin', False):
+
+        is_admin = claims.get('is_admin', False)
+        if review.user_id != current_user_id and not is_admin:
             return {'error': 'Unauthorized action'}, 403
 
         try:
@@ -118,7 +133,8 @@ class ReviewResource(Resource):
         if not review:
             return {'error': 'Review not found'}, 404
 
-        if review.user_id != current_user_id and not claims.get('is_admin', False):
+        is_admin = claims.get('is_admin', False)
+        if review.user_id != current_user_id and not is_admin:
             return {'error': 'Unauthorized action'}, 403
 
         if not facade.delete_review(review_id):

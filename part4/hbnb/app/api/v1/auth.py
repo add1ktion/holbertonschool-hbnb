@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+"""Authentication API endpoints."""
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import create_access_token
 from app.services import facade
@@ -12,8 +14,11 @@ login_model = api.model('Login', {
     'password': fields.String(required=True, description='User password')
 })
 
+
 @api.route('/login')
 class Login(Resource):
+    """Resource to handle user authentication."""
+
     @api.expect(login_model, validate=True)
     def post(self):
         """Authenticate user and return a JWT token"""
@@ -30,17 +35,19 @@ class Login(Resource):
                 print(f" - Trouvé : '{u.email}' (ID: {u.id})")
         except Exception as e:
             print(f"❌ Erreur lors du scan SQL : {e}")
-        
+
         user = User.query.filter_by(_email=email).first()
 
         if not user:
             user = User.query.filter_by(email=email).first()
-        
-        print(f"Recherche de '{email}' -> {'✅ TROUVÉ' if user else '❌ NON TROUVÉ'}")
-        
+
+        found_str = '✅ TROUVÉ' if user else '❌ NON TROUVÉ'
+        print(f"Recherche de '{email}' -> {found_str}")
+
         if user:
             is_valid = user.verify_password(password)
-            print(f"Vérification mot de passe : {'✅ VALIDE' if is_valid else '❌ INVALIDE'}")
+            valid_str = '✅ VALIDE' if is_valid else '❌ INVALIDE'
+            print(f"Vérification mot de passe : {valid_str}")
         print("--------------------------------------\n")
         # --- FIN SECTION DEBUG ---
 
@@ -52,5 +59,5 @@ class Login(Resource):
             identity=str(user.id),
             additional_claims={"is_admin": user.is_admin}
         )
-        
+
         return {'access_token': access_token}, 200

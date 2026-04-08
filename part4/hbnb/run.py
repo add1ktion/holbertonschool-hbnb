@@ -1,8 +1,14 @@
+#!/usr/bin/env python3
+"""Main entry point to run the HBnB application."""
+
 import os
 from app import create_app
 
 env = os.getenv('FLASK_ENV', 'development')
-config_path = "config.ProductionConfig" if env == 'production' else "config.DevelopmentConfig"
+config_path = (
+    "config.ProductionConfig" if env == 'production'
+    else "config.DevelopmentConfig"
+)
 
 app = create_app(config_path)
 

@@ -1,3 +1,5 @@
+"""Initialization module for the HBnB application."""
+
 import os
 from flask import Flask
 from flask_bcrypt import Bcrypt
@@ -10,20 +12,28 @@ db = SQLAlchemy()
 bcrypt = Bcrypt()
 jwt = JWTManager()
 
+
 def create_app(config_class="config.DevelopmentConfig"):
+    """Creates and configures the Flask application.
+
+    Returns:
+        Flask app object.
+    """
     # On récupère le chemin absolu du dossier 'app'
     app_dir = os.path.dirname(os.path.abspath(__file__))
     # Le dossier racine du projet (là où se trouvent templates/ et static/)
     root_dir = os.path.dirname(app_dir)
 
     # Configuration explicite des dossiers
-    app = Flask(__name__, 
-                template_folder=os.path.join(root_dir, 'templates'),
-                static_folder=os.path.join(root_dir, 'static'),
-                static_url_path='/static') # Crucial pour le chargement du CSS
-    
+    app = Flask(
+        __name__,
+        template_folder=os.path.join(root_dir, 'templates'),
+        static_folder=os.path.join(root_dir, 'static'),
+        static_url_path='/static'  # Crucial pour le chargement du CSS
+    )
+
     app.config.from_object(config_class)
-    
+
     # Configuration CORS large pour le développement local sur le même port
     CORS(app, resources={r"/*": {"origins": "*"}})
 
@@ -52,8 +62,8 @@ def create_app(config_class="config.DevelopmentConfig"):
     api = Api(
         app, version='1.0',
         title='HBnB API',
-        description='HBnB Application API',      
-        doc='/api/v1/' # La doc Swagger sera sur /api/v1/
+        description='HBnB Application API',
+        doc='/api/v1/'  # La doc Swagger sera sur /api/v1/
     )
 
     api.add_namespace(auth_ns, path='/api/v1/auth')

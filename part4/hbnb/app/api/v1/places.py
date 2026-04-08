@@ -1,4 +1,6 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
+"""Places API endpoints."""
+
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from app.services import facade
@@ -28,13 +30,20 @@ place_model = api.model('Place', {
     'title': fields.String(required=True, description='Title of the place'),
     'description': fields.String(description='Description of the place'),
     'price': fields.Float(required=True, description='Price per night'),
-    'latitude': fields.Float(required=True, description='Latitude of the place'),
-    'longitude': fields.Float(required=True, description='Longitude of the place'),
+    'latitude': fields.Float(
+        required=True, description='Latitude of the place'
+    ),
+    'longitude': fields.Float(
+        required=True, description='Longitude of the place'
+    ),
     'owner_id': fields.String(required=True, description='ID of the owner')
 })
 
+
 @api.route('/')
 class PlaceList(Resource):
+    """Resource for managing a list of places."""
+
     @api.expect(place_model, validate=True)
     @api.response(201, 'Place successfully created')
     @api.response(400, 'Invalid input data')
@@ -46,7 +55,8 @@ class PlaceList(Resource):
         place_data = api.payload.copy()
 
         requested_owner_id = place_data.get('owner_id')
-        if not claims.get('is_admin') and requested_owner_id != current_user_id:
+        is_admin = claims.get('is_admin', False)
+        if not is_admin and requested_owner_id != current_user_id:
             return {'error': 'Invalid input data'}, 400
 
         place_data['owner_id'] = current_user_id
@@ -80,6 +90,8 @@ class PlaceList(Resource):
 
 @api.route('/<place_id>')
 class PlaceResource(Resource):
+    """Resource for managing a single place."""
+
     @api.response(200, 'Place details retrieved successfully')
     @api.response(404, 'Place not found')
     def get(self, place_id):
@@ -103,8 +115,17 @@ class PlaceResource(Resource):
                 'last_name': owner.last_name,
                 'email': owner.email,
             } if owner else None,
-            'amenities': [{'id': a.id, 'name': a.name} for a in place.amenities],
-            'reviews': [{'id': r.id, 'text': r.text, 'rating': r.rating, 'user_name': r.author.first_name} for r in place.reviews]
+            'amenities': [
+                {'id': a.id, 'name': a.name} for a in place.amenities
+            ],
+            'reviews': [
+                {
+                    'id': r.id,
+                    'text': r.text,
+                    'rating': r.rating,
+                    'user_name': r.author.first_name
+                } for r in place.reviews
+            ]
         }, 200
 
     @api.expect(place_model)
@@ -135,7 +156,9 @@ class PlaceResource(Resource):
 
 @api.route('/<place_id>/reviews')
 class PlaceReviewList(Resource):
-    @api.response(200, 'List of reviews for the place retrieved successfully')
+    """Resource to get reviews of a specific place."""
+
+    @api.response(200, 'List of reviews for the place retrieved')
     @api.response(404, 'Place not found')
     def get(self, place_id):
         """Get all reviews for a specific place"""

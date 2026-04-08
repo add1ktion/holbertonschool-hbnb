@@ -1,4 +1,6 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
+"""Users API endpoints."""
+
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from app.services import facade
@@ -7,10 +9,16 @@ api = Namespace('users', description='User operations')
 
 # Define the user model for input validation and documentation
 user_model = api.model('User', {
-    'first_name': fields.String(required=True, description='First name of the user'),
-    'last_name': fields.String(required=True, description='Last name of the user'),
+    'first_name': fields.String(
+        required=True, description='First name of the user'
+    ),
+    'last_name': fields.String(
+        required=True, description='Last name of the user'
+    ),
     'email': fields.String(required=True, description='Email of the user'),
-    'password': fields.String(required=True, description='Password for the user')
+    'password': fields.String(
+        required=True, description='Password for the user'
+    )
 })
 
 user_update_model = api.model('UserUpdate', {
@@ -20,8 +28,11 @@ user_update_model = api.model('UserUpdate', {
     'password': fields.String(description='Password for the user')
 })
 
+
 @api.route('/')
 class UserList(Resource):
+    """Resource for managing a list of users."""
+
     @api.expect(user_model, validate=True)
     @api.response(201, 'User successfully created')
     @api.response(400, 'Email already registered')
@@ -32,7 +43,7 @@ class UserList(Resource):
         claims = get_jwt()
         if not claims.get('is_admin', False):
             return {'error': 'Admin privileges required'}, 403
-        
+
         user_data = api.payload
 
         safe_data = {
@@ -59,11 +70,18 @@ class UserList(Resource):
     def get(self):
         """Get list of all users"""
         users = facade.get_all_users()
-        return [{'id': u.id, 'first_name': u.first_name, 'last_name': u.last_name, 'email': u.email} for u in users], 200
+        return [{
+            'id': u.id,
+            'first_name': u.first_name,
+            'last_name': u.last_name,
+            'email': u.email
+        } for u in users], 200
 
 
 @api.route('/<user_id>')
 class UserResource(Resource):
+    """Resource for managing a single user."""
+
     @api.response(200, 'User details retrieved successfully')
     @api.response(404, 'User not found')
     def get(self, user_id):
@@ -90,16 +108,16 @@ class UserResource(Resource):
 
         if user_id != current_user_id and not claims.get('is_admin', False):
             return {'error': 'Unauthorized action'}, 403
-        
+
         user = facade.get_user(user_id)
         if not user:
             return {'error': 'User not found'}, 404
 
         data = api.payload
 
-        if ('email' in data or 'password' in data) and not claims.get('is_admin', False):
+        mod_restricted = ('email' in data or 'password' in data)
+        if mod_restricted and not claims.get('is_admin', False):
             return {'error': 'You cannot modify email or password'}, 400
-
 
         allowed_fields = ['first_name', 'last_name', 'email', 'password']
         update_data = {k: v for k, v in data.items() if k in allowed_fields}
